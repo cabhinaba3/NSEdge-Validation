@@ -76,13 +76,16 @@ python3 src/simulators/dipdce_real_injection.py
 To avoid polluting your host machine, you can run the entire evaluation natively within an isolated container.
 
 ### 1. Build the Docker Image
+Because the `Dockerfile` automatically downloads and compiles the heavy OMNeT++, INET, and Simu5G environments, this build process can take 10-20 minutes depending on your CPU:
 ```bash
 docker build -t nsedge-validation .
 ```
 
 ### 2. Run the Container
+Once the container is built, the environment is fully staged and compiled. You can immediately drop into the container and execute the final simulation pipeline:
 ```bash
 docker run -it nsedge-validation
-```
 
-*Inside the container, you can follow Steps 2 through 4 from the Native instructions above!*
+# Inside the container, directly run the native extraction tool:
+python3 src/simulators/dipdce_real_injection.py
+```

@@ -25,15 +25,21 @@ RUN apt-get update && apt-get install -y \
     unzip \
     && rm -rf /var/lib/apt/lists/*
 
-# Set up exactly matching workspace directory to prevent absolute path errors
-RUN mkdir -p /proj/oasees-PG0/NS3-Edge/NSEdge-Validation
-WORKDIR /proj/oasees-PG0/NS3-Edge/NSEdge-Validation
+# Set up generic workspace directory
+RUN mkdir -p /workspace
+WORKDIR /workspace
 
 # Copy the entire codebase into the container
-COPY . /proj/oasees-PG0/NS3-Edge/NSEdge-Validation/
+COPY . /workspace/
 
 # Execute the Dependency Installation script (Downloads OMNeT++ 5.6 & 6.0, INET, and Micromamba)
 RUN chmod +x install_dep.sh && ./install_dep.sh
 
+# Compile OMNeT++, INET, and Simu5G Native Environments
+RUN cd third_party && chmod +x build_omnetpp6.sh build_inet_603.sh build_simu5g.sh
+RUN cd third_party && ./build_omnetpp6.sh
+RUN cd third_party && ./build_inet_603.sh
+RUN cd third_party && ./build_simu5g.sh
+
 # Provide instructions upon entry
-CMD ["/bin/bash", "-c", "echo 'Container Ready! Navigate to third_party and run build_omnetpp6.sh and build_simu5g.sh to compile the discrete-event engines. Then run python3 src/simulators/dipdce_real_injection.py' && /bin/bash"]
+CMD ["/bin/bash", "-c", "echo 'Container Ready! Run: python3 src/simulators/dipdce_real_injection.py to execute the full evaluation suite natively.' && /bin/bash"]
