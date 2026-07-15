@@ -1,0 +1,42 @@
+# Build Artifacts
+out/
+bin/
+*.o
+*.so
+*.dll
+*.class
+*.jar
+*.a
+
+# Virtual Environments & Dependencies
+micromamba/
+micromamba_root/
+*env/
+venv/
+.env
+__pycache__/
+*.pyc
+
+# Simulation Outputs & Logs
+*.vec
+*.sca
+*.vci
+*.log
+*.csv
+results/
+tests/results/
+
+# Archives
+*.tgz
+*.tar.gz
+*.zip
+*.tar
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

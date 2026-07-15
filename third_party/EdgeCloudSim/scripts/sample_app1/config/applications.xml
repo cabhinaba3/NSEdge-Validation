@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<applications>
+	<application name="DIPDCE_APP">
+		<usage_percentage>100</usage_percentage>
+		<prob_cloud_selection>11</prob_cloud_selection>
+		<poisson_interarrival>0.0333</poisson_interarrival>
+		<delay_sensitivity>0</delay_sensitivity>
+		<active_period>10</active_period>
+		<idle_period>0.001</idle_period>
+		<data_upload>180</data_upload>
+		<data_download>0.001</data_download>
+		<task_length>5000</task_length>
+		<required_core>1</required_core>
+		<vm_utilization_on_edge>15</vm_utilization_on_edge>
+		<vm_utilization_on_cloud>1</vm_utilization_on_cloud>
+		<vm_utilization_on_mobile>0</vm_utilization_on_mobile>
+	</application>
+</applications>

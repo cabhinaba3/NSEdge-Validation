@@ -1,0 +1,75 @@
+{
+  "hardware_profiles": [
+    {
+      "hw_id": "intel_i5",
+      "arch": "X86_64",
+      "cpu_cores": 6,
+      "cpu_freq_mhz": 3000,
+      "idle_power_w": 15.0,
+      "tdp_w": 65.0,
+      "has_gpu": false,
+      "workloads": [
+        {
+          "input_bytes": 20000,
+          "active_power_w": 35.0,
+          "cpu_util_pct": 50.0,
+          "gpu_util_pct": 0.0,
+          "execution_time_ms": {
+            "mean": 5.09,
+            "stddev": 0.88
+          }
+        },
+        {
+          "input_bytes": 100352,
+          "active_power_w": 40.0,
+          "cpu_util_pct": 60.0,
+          "gpu_util_pct": 0.0,
+          "execution_time_ms": {
+            "mean": 52.80,
+            "stddev": 0.50
+          }
+        },
+        {
+          "input_bytes": 150688,
+          "active_power_w": 42.0,
+          "cpu_util_pct": 65.0,
+          "gpu_util_pct": 0.0,
+          "execution_time_ms": {
+            "mean": 101.30,
+            "stddev": 0.51
+          }
+        },
+        {
+          "input_bytes": 180000,
+          "active_power_w": 45.0,
+          "cpu_util_pct": 70.0,
+          "gpu_util_pct": 0.0,
+          "execution_time_ms": {
+            "mean": 132.44,
+            "stddev": 0.53
+          }
+        },
+        {
+          "input_bytes": 320000,
+          "active_power_w": 50.0,
+          "cpu_util_pct": 80.0,
+          "gpu_util_pct": 0.0,
+          "execution_time_ms": {
+            "mean": 311.79,
+            "stddev": 4.22
+          }
+        },
+        {
+          "input_bytes": 500000,
+          "active_power_w": 55.0,
+          "cpu_util_pct": 90.0,
+          "gpu_util_pct": 0.0,
+          "execution_time_ms": {
+            "mean": 637.26,
+            "stddev": 31.52
+          }
+        }
+      ]
+    }
+  ]
+}
