@@ -17,12 +17,19 @@ It compares the performance of the proposed **NSEdge** simulator against a **phy
 The NS-3 simulation models the migration policy using realistically sized buffers and TCP windowing. 
 To ensure the simulation aligns with realistic Linux TCP behaviors, the `ns3-migration-scenario.cc` script explicitly increases `TcpSocket::SndBufSize` and `RcvBufSize` to 4 MB to prevent artificial sender-side bufferbloat when the RTT increases.
 
-**Execution:**
+**Execution (Ethernet Baseline):**
 ```bash
 cd /proj/oasees-PG0/NS3-Edge/ns-3
 ./ns3 run scratch/ns3-migration-scenario
 ```
-*(The simulation automatically saves its output tasks to `ns3_tasks.csv`)*
+*(The simulation automatically saves its output tasks to `results-migration/tasks.csv`)*
+
+**Execution (5G-NR):**
+You can also run the migration scenario utilizing a 5G-NR sub-6 GHz link to demonstrate the impact of 5G transport characteristics on the migration performance.
+```bash
+cd /proj/oasees-PG0/NS3-Edge/ns-3
+./ns3 run 'scratch/ns3-migration-scenario --tech=5g'
+```
 
 ---
 
