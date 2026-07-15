@@ -6,6 +6,7 @@ import random
 import socket
 import sys
 import multiprocessing
+import queue
 import threading
 import time
 from typing import Dict, List, Any
@@ -97,8 +98,9 @@ def run_single_task(task_id: int, slave: Dict[str, Any], workload_size: int, arr
 
 def mobility_manager(start_time: float, duration: float, migration_trigger_event: threading.Event):
     """Simulates user moving away from Node 1 (delay increases) and towards Node 2 (delay decreases)."""
-    logger.info("Mobility manager started.")
+    logger.info("Mobility manager started. Calling initial apply_tc_filters...")
     apply_tc_filters(10.0, 50.0)
+    logger.info("Initial apply_tc_filters returned!")
     
     migrated = False
     while True:
@@ -111,9 +113,12 @@ def mobility_manager(start_time: float, duration: float, migration_trigger_event
         d1 = 10.0 + progress * 40.0 # 10 -> 50
         d2 = 50.0 - progress * 40.0 # 50 -> 10
         
+        logger.info("Calling apply_tc_filters...")
         apply_tc_filters(d1, d2)
+        logger.info("apply_tc_filters returned!")
         
         # Follow Me at the Edge trigger: when d1 > d2 + 10ms
+        logger.info(f"Mobility loop: elapsed={elapsed:.2f}, progress={progress:.2f}, d1={d1:.2f}, d2={d2:.2f}")
         if d1 > d2 + 10.0 and not migrated:
             logger.warning("Mobility trigger: Node 1 delay (%.1f) > Node 2 (%.1f) + 10ms. TRIGGERING MIGRATION!", d1, d2)
             migration_trigger_event.set()
@@ -156,8 +161,8 @@ def main():
     
     current_slave = slave1
     
-    records_queue = multiprocessing.Queue()
-    processes: List[multiprocessing.Process] = []
+    records_queue = queue.Queue()
+    processes: List[threading.Thread] = []
     
     t_start = time.perf_counter()
     migration_trigger_event = threading.Event()
@@ -171,8 +176,7 @@ def main():
     next_arrival = 0.0
     migration_in_progress = False
     
-    pool = multiprocessing.Pool(processes=20)
-    
+
     while True:
         elapsed = time.perf_counter() - t_start
         if elapsed >= duration:
@@ -188,11 +192,15 @@ def main():
                     current_slave = slave2
                 migration_in_progress = False
                 
-            pool.apply_async(migrate_state, callback=on_migration_complete)
+            def migration_worker():
+                res = migrate_state()
+                on_migration_complete(res)
+            
+            threading.Thread(target=migration_worker, daemon=True).start()
             
         if elapsed >= next_arrival:
             # Dispatch
-            process = multiprocessing.Process(
+            process = threading.Thread(
                 target=run_single_task,
                 args=(task_id, current_slave, workload_size, elapsed, records_queue)
             )
@@ -205,13 +213,10 @@ def main():
 
         time.sleep(0.005)
 
-    pool.close()
-    pool.join()
     for p in processes:
         p.join(timeout=2.0)
 
     task_records = []
-    import queue
     while True:
         try:
             task_records.append(records_queue.get_nowait())

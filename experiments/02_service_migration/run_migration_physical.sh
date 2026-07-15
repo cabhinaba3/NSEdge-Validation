@@ -22,8 +22,8 @@ nohup $PYTHON_VENV $RECV_PATH 9999 > /tmp/recv_9999.log 2>&1 &
 sleep 2
 
 echo "--> Running Migration Orchestrator"
-# 30 seconds duration, 5 Hz arrival rate, 150 matrix size (150*150*8 = 180000 bytes)
-$PYTHON_VENV $ORCH_PATH 30.0 5.0 150 $OUT_CSV
+# 30 seconds duration, 2 Hz arrival rate, 150 matrix size (150*150*8 = 180000 bytes)
+$PYTHON_VENV $ORCH_PATH 30.0 2.0 150 $OUT_CSV
 
 echo "--> Shutting down Workers"
 pkill -f worker.py || true
