@@ -1,0 +1,47 @@
+{
+  "_comment": "Single source of truth for the NSEdge cross-simulator benchmark. All engine runners read these parameters so the workload is identical. Operating point is the CPU-validated regime of the NSEdge paper (measured Intel-i5 matmul profile, ~5 Hz per edge worker); GPU/high-fps DipDCE is deferred (no measured GPU profile).",
+
+  "workload": {
+    "name": "DipDCE edge-offload (object-detection inference frames)",
+    "frame_bytes": 180000,
+    "per_worker_fps": 5,
+    "sla_ms": 250,
+    "sim_duration_s": 30,
+    "compute_model": "measured Intel-i5 matmul profile (~132 ms per 180 KB frame); injected identically across engines"
+  },
+
+  "network": {
+    "edge_link_bandwidth": "1Gbps",
+    "edge_link_base_latency_ms": 0.39,
+    "note": "cloud-offload fraction is a saturation-free high-latency sink modelled identically across engines; the packet-level comparison targets the edge path"
+  },
+
+  "operating_point": {
+    "edge_workers": 4,
+    "aggregate_fps": 20
+  },
+
+  "scalability_sweep": {
+    "edge_workers": [1, 2, 4, 8, 16, 32, 64],
+    "per_worker_fps": 5,
+    "note": "aggregate load scales as 5 x workers; wall-clock vs workers is the scalability metric"
+  },
+
+  "loss_test": {
+    "loss_rate": 0.03,
+    "physical_reliability_pct": 67.2
+  },
+
+  "physical_ground_truth": {
+    "baseline_rtt_ms": 143.6,
+    "loss_reliability_pct": 67.2,
+    "source": "NSEdge paper validation: tc-netem shaped loopback, 4 workers, 5 Hz, 180 KB"
+  },
+
+  "measurement": {
+    "seeds": 5,
+    "speed_metric": "wall-clock seconds to simulate sim_duration_s, single run, /usr/bin/time -v (peak RSS)",
+    "real_time_factor": "sim_duration_s / wall_clock_s",
+    "engines": ["NSEdge", "EdgeSimPy", "EdgeCloudSim", "Simu5G"]
+  }
+}

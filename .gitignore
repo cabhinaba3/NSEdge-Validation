@@ -40,3 +40,12 @@ tests/results/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Downloaded toolchains (recreated by install/bootstrap_sims.sh)
+third_party/omnetpp-6.0.3/
+third_party/omnetpp-5.6.2/
+third_party/inet45_603/
+third_party/inet4.5/
+third_party/micromamba/
+third_party/*.tgz
+third_party/*.tar.gz
