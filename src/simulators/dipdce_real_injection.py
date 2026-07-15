@@ -32,7 +32,8 @@ def recv_all(sock, length):
 def get_physical_baseline():
     """Starts a worker, sends a task to measure physical CPU time and network RTT, then kills it."""
     print("[1] Collecting Single-Request Physical Cluster Baseline...")
-    worker_proc = subprocess.Popen(["python3", os.path.join(BASE_DIR, "src/worker.py"), "--port", str(WORKER_PORT)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    log_file = open(os.path.join(BASE_DIR, "worker.log"), "w")
+    worker_proc = subprocess.Popen(["python3", os.path.join(BASE_DIR, "src/worker.py"), "--port", str(WORKER_PORT)], stdout=log_file, stderr=subprocess.STDOUT)
     time.sleep(1.5) # Wait for worker to start
     
     try:
@@ -57,8 +58,8 @@ def get_physical_baseline():
         total_rtt_ms = (t_net_end - t_net_start) * 1000.0
         client_socket.close()
     finally:
-        worker_proc.terminate()
-        worker_proc.wait()
+        subprocess.run(["pkill", "-9", "-f", "worker.py"])
+        worker_proc.wait(timeout=2)
         
     print(f"    Physical Execution Time: {exec_ms:.2f} ms")
     print(f"    Physical Network RTT: {total_rtt_ms:.2f} ms")
@@ -112,7 +113,8 @@ def send_request(task_id):
 
 def run_physical_dipdce(b, p, x):
     print(f"\n[3] Generating Physical Traffic Profile (b={b}, p={p}, x={x*100:.1f}%) against Worker...")
-    worker_proc = subprocess.Popen(["python3", os.path.join(BASE_DIR, "src/worker.py"), "--port", str(WORKER_PORT), "--batch-size", str(b), "--processes", str(p)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    log_file = open(os.path.join(BASE_DIR, "worker.log"), "a")
+    worker_proc = subprocess.Popen(["python3", os.path.join(BASE_DIR, "src/worker.py"), "--port", str(WORKER_PORT), "--batch-size", str(b), "--processes", str(p)], stdout=log_file, stderr=subprocess.STDOUT)
     time.sleep(1.5)
     
     total_requests = int(NUM_SENSORS * FPS * DURATION)
@@ -132,8 +134,11 @@ def run_physical_dipdce(b, p, x):
         for future in concurrent.futures.as_completed(futures):
             delays.append(future.result())
             
-    worker_proc.terminate()
-    worker_proc.wait()
+    subprocess.run(["pkill", "-9", "-f", "worker.py"])
+    try:
+        worker_proc.wait(timeout=2)
+    except:
+        pass
     
     avg_delay = sum(delays) / len(delays) if delays else 0.0
     print(f"    Physical DipDCE Average Delay: {avg_delay*1000:.2f} ms")
