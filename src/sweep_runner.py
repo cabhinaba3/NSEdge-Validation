@@ -18,8 +18,8 @@ import matplotlib.pyplot as plt
 
 SLAVES = ["n0710-09", "n078-27", "n079-22", "n0710-10"]
 IFACES = ["enp1s0f3", "enp3s0", "enp1s0f0", "enp1s0f1"]
-WORKER_PATH = "/proj/oasees-PG0/NS3-Edge/validation_experiment/src/worker.py"
-ORCH_PATH = "/proj/oasees-PG0/NS3-Edge/validation_experiment/src/orchestrator.py"
+WORKER_PATH = "/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/src/worker.py"
+ORCH_PATH = "/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/src/orchestrator.py"
 PYTHON_VENV = "/proj/oasees-PG0/net4hpc/.venv/bin/python3"
 NS3_DIR = "/proj/oasees-PG0/NS3-Edge/ns-3"
 

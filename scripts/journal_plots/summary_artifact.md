@@ -74,13 +74,13 @@ To match Linux network behavior under packet loss:
 Validation sweeps compared the simulator against a physical homogeneous cluster of 5 Intel Core i5 nodes over SSH using two principal mechanisms:
 
 ### 3.1 Concurrent Multi-Threaded Daemon (`worker.py`)
-To ensure physical nodes match the simulator's application-level queue model, we refactored the blocking socket server in [`worker.py`](file:///proj/oasees-PG0/NS3-Edge/validation_experiment/src/worker.py):
+To ensure physical nodes match the simulator's application-level queue model, we refactored the blocking socket server in [`worker.py`](file:///proj/oasees-PG0/NS3-Edge/NSEdge-Validation/src/worker.py):
 - **Non-blocking TCP Acceptor:** The main thread accepts connections and spawns dedicated reader threads (`threading.Thread`) instantly. This establishes TCP handshakes immediately, preventing connections from accumulating in the OS TCP backlog.
 - **Worker Queue:** Once a thread finishes reading the task JSON payload, it places the request (along with its socket descriptor) into a thread-safe `queue.Queue()`.
 - **Sequential Processor:** A background thread pops tasks sequentially from the queue, executes the matrix multiplication workload, writes the response header and payload back over the socket, and closes the connection.
 
 ### 3.2 Dynamic Link Shaping (`deepdecision_runner.py`)
-To emulate dynamic cellular bandwidth degradation on the physical cluster, we modified [`deepdecision_runner.py`](file:///proj/oasees-PG0/NS3-Edge/validation_experiment/src/deepdecision_runner.py) to execute traffic shaping:
+To emulate dynamic cellular bandwidth degradation on the physical cluster, we modified [`deepdecision_runner.py`](file:///proj/oasees-PG0/NS3-Edge/NSEdge-Validation/src/deepdecision_runner.py) to execute traffic shaping:
 - **Netem Shaping Thread:** Spawns a background thread that dynamically configures the Linux `tc qdisc` tool on the master's interface (`enp1s0f3`) connected to `slavenode1`:
   - **$t < 20\text{ s}$:** `sudo tc qdisc add dev enp1s0f3 root netem rate 100kbit delay 30ms`
   - **$20 \le t < 60\text{ s}$:** `sudo tc qdisc replace dev enp1s0f3 root netem rate 500kbit delay 30ms`
@@ -173,7 +173,7 @@ The decision optimizer solves Algorithm 1 across 3 tiers: **Local Device Process
 To reproduce the validation sweeps and regenerate plots on the master node `n079-16`:
 
 ```bash
-cd /proj/oasees-PG0/NS3-Edge/validation_experiment
+cd /proj/oasees-PG0/NS3-Edge/NSEdge-Validation
 eval $(ssh-agent -s)
 ssh-add /users/abchakra/key.pem
 /proj/oasees-PG0/net4hpc/.venv/bin/python3 src/extensive_validation.py

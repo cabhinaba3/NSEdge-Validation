@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 
 DURATION = 100.0
 NS3_DIR = "/proj/oasees-PG0/NS3-Edge/ns-3"
-VAL_DIR = "/proj/oasees-PG0/NS3-Edge/validation_experiment"
+VAL_DIR = "/proj/oasees-PG0/NS3-Edge/NSEdge-Validation"
 
 SLAVES = ["n0710-09", "n078-27", "n079-22", "n0710-10"]
 MODES = ["deepdecision", "local", "remote", "strawman"]

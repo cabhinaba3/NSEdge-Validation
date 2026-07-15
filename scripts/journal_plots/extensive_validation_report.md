@@ -35,12 +35,12 @@ We modified the core C++ simulation module to replace the algebraic delay calcul
    * Configured `ns3::TcpSocketBase::MinRto` to **200 ms** to match Linux kernel behavior.
 
 ### 3.2 Physical Daemon Concurrent Refactoring (`worker.py`)
-To align with the simulator's application-level CPU scheduling, we upgraded the physical worker daemon ([`worker.py`](file:///proj/oasees-PG0/NS3-Edge/validation_experiment/src/worker.py)):
+To align with the simulator's application-level CPU scheduling, we upgraded the physical worker daemon ([`worker.py`](file:///proj/oasees-PG0/NS3-Edge/NSEdge-Validation/src/worker.py)):
 1. **Multi-Threaded Socket Acceptor:** Replaced the blocking main loop with a thread-spawner (`threading.Thread`) that accepts connections non-blockingly and reads payload bytes concurrently, allowing instant TCP handshakes.
 2. **Sequential CPU Execution Queue:** Read task payloads are loaded into a thread-safe `queue.Queue()`. A dedicated background `task_processor` thread continuously pops task items, executes the matrix multiplication workload sequentially on the CPU, and writes the response packet back to the client socket, accurately reflecting CPU resource contention.
 
 ### 3.3 Dynamic Link Shaping (`deepdecision_runner.py`)
-To match the dynamic bandwidth/delay profile of the DeepDecision simulation scenario ($100\text{ kbps} \to 500\text{ kbps} \to 1000\text{ kbps}$ and $30\text{ ms}$ latency), we modified [`deepdecision_runner.py`](file:///proj/oasees-PG0/NS3-Edge/validation_experiment/src/deepdecision_runner.py):
+To match the dynamic bandwidth/delay profile of the DeepDecision simulation scenario ($100\text{ kbps} \to 500\text{ kbps} \to 1000\text{ kbps}$ and $30\text{ ms}$ latency), we modified [`deepdecision_runner.py`](file:///proj/oasees-PG0/NS3-Edge/NSEdge-Validation/src/deepdecision_runner.py):
 1. **Dynamic Netem Thread:** Added a background profile thread that shapes the physical interface `enp1s0f3` (connected to the worker `n0710-09`) dynamically over the 100-second timeline.
 2. **Commands Executed:**
    * At $t = 0$: `sudo tc qdisc add dev enp1s0f3 root netem rate 100kbit delay 30ms`
@@ -101,7 +101,7 @@ With concurrent socket queuing and dynamic netem link shaping, the physical and 
 ---
 
 ## 6. Visual Artifacts Location
-All validation plots are saved in the cluster directory `/proj/oasees-PG0/NS3-Edge/validation_experiment/docs/`:
+All validation plots are saved in the cluster directory `/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/docs/`:
 - `net_realism_validation.png`: Network realism sweeps (baseline, loss, jitter).
 - `fl_performance_validation.png`: Federated Learning scalability curve (1 to 1000 nodes).
 - `sc_stress_validation.png`: Smart City video analytics scalability curve (1 to 1000 nodes).

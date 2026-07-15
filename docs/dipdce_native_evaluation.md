@@ -13,7 +13,7 @@ To perform this faithfully while respecting the constraints of abstract simulato
 ## 2. Delay Divergence (1 to 100 Devices)
 As the volume of connected sensor devices scales up to 100 (generating 3000 total images per second), the optimization algorithm successfully activates cloud offloading to prevent the Edge capacity from buckling.
 
-![Native Scaling to 100 Sensors](file:///proj/oasees-PG0/NS3-Edge/validation_experiment/docs/dipdce_native_scaling.png)
+![Native Scaling to 100 Sensors](file:///proj/oasees-PG0/NS3-Edge/NSEdge-Validation/docs/dipdce_native_scaling.png)
 
 ### The Defect of Abstract Frameworks
 - **EdgeSimPy & EdgeCloudSim**: As seen on the plot, these frameworks severely underestimate reality. Since they lack physical RF collision mechanics, they log delays of only ~$110$ ms (the baseline cloud time) at $100$ devices, falsely suggesting that thousands of packets can traverse the air interface without penalty.

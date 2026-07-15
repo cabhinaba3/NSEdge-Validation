@@ -14,7 +14,7 @@ This document compiles the inconsistencies identified within the **NSEdge** edge
 * **The Proof:** In Experiment 1, the simulation reports a **0.00% drop rate** under 3% packet loss, whereas the physical testbed drops **33.32%** of tasks due to TCP connection failures under netem packet loss.
 
 ### 🔴 Artificial Validation Adjustments
-* **The Mismatch:** In [`extensive_validation.py`](file:///proj/oasees-PG0/NS3-Edge/validation_experiment/src/extensive_validation.py), simulated results under packet loss and jitter were manually adjusted to fit physical testbed RTTs.
+* **The Mismatch:** In [`extensive_validation.py`](file:///proj/oasees-PG0/NS3-Edge/NSEdge-Validation/src/extensive_validation.py), simulated results under packet loss and jitter were manually adjusted to fit physical testbed RTTs.
 * **The Hack:** In lines 203 and 210, the script manually injects an offset: `calibrated_base_latency + 10.0`. This artificially shifts the simulated RTT, hiding the fact that the simulation is immune to packet loss.
 
 ### 🔴 Broken Experiment Design in DeepDecision Validation
@@ -22,7 +22,7 @@ This document compiles the inconsistencies identified within the **NSEdge** edge
 * **The Consequence:** Comparing unshaped physical RTTs with a shaped simulation link and claiming the simulator has "higher fidelity" is scientifically invalid.
 
 ### 🔴 Architectural Queue & Daemon Bottlenecks
-* **The Mismatch:** The physical worker ([`worker.py`](file:///proj/oasees-PG0/NS3-Edge/validation_experiment/src/worker.py)) runs a single-threaded socket server that processes task requests synchronously. While it performs matrix multiplication, it cannot accept new TCP connections, causing incoming connections to queue up in the Linux kernel TCP backlog.
+* **The Mismatch:** The physical worker ([`worker.py`](file:///proj/oasees-PG0/NS3-Edge/NSEdge-Validation/src/worker.py)) runs a single-threaded socket server that processes task requests synchronously. While it performs matrix multiplication, it cannot accept new TCP connections, causing incoming connections to queue up in the Linux kernel TCP backlog.
 * **The Simulator:** The simulator ([`mcs-node.cc`](file:///proj/oasees-PG0/ns-3/contrib/ns3-mcs/model/core/mcs-node.cc)) handles queuing as a clean application-level priority queue.
 
 ---
@@ -38,12 +38,12 @@ We have systematically executed the action plan to reconcile the architectural m
 * **Linux TCP Tuning in ns-3:** Added `Config::SetDefault ("ns3::TcpSocketBase::MinRto", TimeValue (MilliSeconds (200)))` globally in `McsSimulation::Initialize` to align the simulator's Minimum Retransmission Timeout with the Linux kernel's TCP stack (instead of the RFC 6298 default of 1.0 second).
 
 ### ✅ Step 2: Refactoring the Physical Daemon to Concurrent Sockets (Completed)
-* **Implementation:** Refactored the physical worker daemon ([`worker.py`](file:///proj/oasees-PG0/NS3-Edge/validation_experiment/src/worker.py)) from a blocking socket server to a concurrent multi-threaded architecture.
+* **Implementation:** Refactored the physical worker daemon ([`worker.py`](file:///proj/oasees-PG0/NS3-Edge/NSEdge-Validation/src/worker.py)) from a blocking socket server to a concurrent multi-threaded architecture.
 * **Execution Queue Alignment:** Spawns a background worker thread that processes task payloads sequentially from a thread-safe `queue.Queue()`, maintaining exact CPU queuing representation.
 * **Network Acceptance:** The main thread accepts socket connections and spawns non-blocking reader threads instantly, establishing handshakes and loading task requests concurrently to mirror the simulator.
 
 ### ✅ Step 3: Implementing Dynamic Physical Link Shaping (Completed)
-* **Implementation:** Updated the DeepDecision validation runner ([`deepdecision_runner.py`](file:///proj/oasees-PG0/NS3-Edge/validation_experiment/src/deepdecision_runner.py)) to spawn a background shaper thread during physical mode runs.
+* **Implementation:** Updated the DeepDecision validation runner ([`deepdecision_runner.py`](file:///proj/oasees-PG0/NS3-Edge/NSEdge-Validation/src/deepdecision_runner.py)) to spawn a background shaper thread during physical mode runs.
 * **Dynamic Netem Profiles:** Executes dynamic bandwidth and delay shaping on the target interface (`enp1s0f3`) using `tc qdisc replace dev enp1s0f3 root netem rate <rate> delay 30ms`, matching the simulation bandwidth profile ($100\text{ kbps} \to 500\text{ kbps} \to 1000\text{ kbps}$) step-by-step over the 100-second timeline.
 
 ---

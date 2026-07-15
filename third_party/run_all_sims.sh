@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
 
-export MAMBA_ROOT_PREFIX=/proj/oasees-PG0/NS3-Edge/validation_experiment/third_party/micromamba_root
-eval "$(/proj/oasees-PG0/NS3-Edge/validation_experiment/third_party/micromamba/micromamba shell hook -s bash)"
+export MAMBA_ROOT_PREFIX=/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/micromamba_root
+eval "$(/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/micromamba/micromamba shell hook -s bash)"
 micromamba activate sim_env
 
-cd /proj/oasees-PG0/NS3-Edge/validation_experiment/third_party
+cd /proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party
 
 echo "Building FogNetSim++..."
-export PATH=$PATH:/proj/oasees-PG0/NS3-Edge/validation_experiment/third_party/omnetpp-5.6.2/bin
+export PATH=$PATH:/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/omnetpp-5.6.2/bin
 cd omnetpp-5.6.2
 source setenv -f
 cd ..
@@ -31,7 +31,7 @@ grep "Elapsed:" fognetsim_results.txt > fognetsim_exec.txt || true
 cd ../..
 
 echo "Building Simu5G..."
-export PATH=$PATH:/proj/oasees-PG0/NS3-Edge/validation_experiment/third_party/omnetpp-6.0.3/bin
+export PATH=$PATH:/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/omnetpp-6.0.3/bin
 cd omnetpp-6.0.3
 source setenv -f
 cd ..

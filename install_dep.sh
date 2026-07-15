@@ -57,18 +57,11 @@ if [ ! -d "inet45_603" ]; then
     mv inet4.5.0 inet45_603
 fi
 
-echo "5. Cloning Target Frameworks..."
-# Simu5G
-if [ ! -d "Simu5G" ]; then
-    git clone https://github.com/Simu5G/Simu5G.git
-fi
-
-# EdgeCloudSim
-if [ ! -d "EdgeCloudSim" ]; then
-    git clone https://github.com/CagataySonmez/EdgeCloudSim.git
-fi
+echo "5. Native Frameworks (Already Integrated)..."
+# Simu5G and EdgeCloudSim are checked into this repository to preserve our custom native patches.
 
 echo "=============================================================================="
 echo "Dependencies staged successfully!"
 echo "Please refer to install.md for the step-by-side compilation instructions."
 echo "=============================================================================="
+urbis

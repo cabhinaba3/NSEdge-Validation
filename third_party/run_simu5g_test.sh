@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
-export MAMBA_ROOT_PREFIX=/proj/oasees-PG0/NS3-Edge/validation_experiment/third_party/micromamba_root
+export MAMBA_ROOT_PREFIX=/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/micromamba_root
 export PATH=$MAMBA_ROOT_PREFIX/envs/sim_env/bin:$PATH
-export PATH=$PATH:/proj/oasees-PG0/NS3-Edge/validation_experiment/third_party/omnetpp-6.0.3/bin
-source /proj/oasees-PG0/NS3-Edge/validation_experiment/third_party/omnetpp-6.0.3/setenv -f
-source /proj/oasees-PG0/NS3-Edge/validation_experiment/third_party/inet45_603/setenv
+export PATH=$PATH:/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/omnetpp-6.0.3/bin
+source /proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/omnetpp-6.0.3/setenv -f
+source /proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/inet45_603/setenv
 
-export SIMU5G_ROOT=/proj/oasees-PG0/NS3-Edge/validation_experiment/third_party/Simu5G
-export INET_ROOT=/proj/oasees-PG0/NS3-Edge/validation_experiment/third_party/inet45_603
+export SIMU5G_ROOT=/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/Simu5G
+export INET_ROOT=/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/inet45_603
 cd $SIMU5G_ROOT/simulations/nr/standalone
 time ../../../bin/simu5g -m -u Cmdenv -c DipDCE-UL --sim-time-limit=10s
 
