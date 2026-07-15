@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+
+import os
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
 """Runner script for DeepDecision validation (INFOCOM 2018) with Edge & Cloud clusters.
 
 Runs both the physical orchestrator and ns-3 simulation across all 4 modes,
@@ -18,7 +22,7 @@ import matplotlib.pyplot as plt
 
 DURATION = 100.0
 NS3_DIR = "/proj/oasees-PG0/NS3-Edge/ns-3"
-VAL_DIR = "/proj/oasees-PG0/NS3-Edge/NSEdge-Validation"
+VAL_DIR = BASE_DIR
 
 SLAVES = ["n0710-09", "n078-27", "n079-22", "n0710-10"]
 MODES = ["deepdecision", "local", "remote", "strawman"]

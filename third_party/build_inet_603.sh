@@ -1,13 +1,16 @@
 #!/bin/bash
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE_DIR="$(dirname "$BASE_DIR")"
+
 set -e
 
 echo "Activating omnetpp-6.0.3..."
-export PATH=$PATH:/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/omnetpp-6.0.3/bin
-cd /proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/omnetpp-6.0.3
+export PATH=$PATH:"$BASE_DIR"/third_party/omnetpp-6.0.3/bin
+cd "$BASE_DIR"/third_party/omnetpp-6.0.3
 source setenv -f
 
 echo "Building INET 4.5.0..."
-cd /proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/inet45_603
+cd "$BASE_DIR"/third_party/inet45_603
 source setenv
 make makefiles
 make -j$(nproc)

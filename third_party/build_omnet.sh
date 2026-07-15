@@ -1,12 +1,15 @@
 #!/bin/bash
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE_DIR="$(dirname "$BASE_DIR")"
+
 set -e
 
 # Setup environment
-export MAMBA_ROOT_PREFIX=/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/micromamba_root
-eval "$(/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/micromamba/micromamba shell hook -s bash)"
+export MAMBA_ROOT_PREFIX="$BASE_DIR"/third_party/micromamba_root
+eval "$("$BASE_DIR"/third_party/micromamba/micromamba shell hook -s bash)"
 micromamba activate sim_env
 
-cd /proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party
+cd "$BASE_DIR"/third_party
 
 # OMNeT++ 5.6.2
 if [ ! -f "omnetpp-5.6.2/bin/opp_run" ]; then

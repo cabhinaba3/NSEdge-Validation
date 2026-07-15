@@ -1,4 +1,7 @@
 #!/bin/bash
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE_DIR="$(dirname "$BASE_DIR")"
+
 set -e
 
 echo "=========================================================="
@@ -7,17 +10,17 @@ echo "=========================================================="
 echo ""
 
 echo ">>> 1. Executing EdgeSimPy Native Benchmark..."
-export MAMBA_ROOT_PREFIX=/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/micromamba_root
-$MAMBA_ROOT_PREFIX/envs/edgesimpy_env/bin/python3 /proj/oasees-PG0/NS3-Edge/NSEdge-Validation/src/simulators/edgesimpy/dipdce_edgesimpy_native.py
+export MAMBA_ROOT_PREFIX="$BASE_DIR"/third_party/micromamba_root
+$MAMBA_ROOT_PREFIX/envs/edgesimpy_env/bin/python3 "$BASE_DIR"/src/simulators/edgesimpy/dipdce_edgesimpy_native.py
 echo ""
 
 echo ">>> 2. Executing Simu5G Native Benchmark..."
-cd /proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party
+cd "$BASE_DIR"/third_party
 ./run_simu5g_test.sh
 echo ""
 
 echo ">>> 3. Executing EdgeCloudSim Native Benchmark..."
-cd /proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/EdgeCloudSim
+cd "$BASE_DIR"/third_party/EdgeCloudSim
 # If EdgeCloudSim is compiled, run it. Otherwise, mock baseline since it's Java 
 echo "[EdgeCloudSim] Wall-Clock Execution Time: 2.15 seconds"
 echo "[EdgeCloudSim] Simulated Entities: Edge Servers, Mobile Devices"

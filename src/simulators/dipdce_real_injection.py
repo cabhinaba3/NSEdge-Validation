@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+
+import os
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+
 import os
 import subprocess
 import time
@@ -29,7 +33,7 @@ def recv_all(sock, length):
 def get_physical_baseline():
     """Starts a worker, sends a task to measure physical CPU time and network RTT, then kills it."""
     print("[1] Collecting Real Physical Cluster Baseline...")
-    worker_proc = subprocess.Popen(["python3", "/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/src/worker.py", str(WORKER_PORT)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    worker_proc = subprocess.Popen(["python3", os.path.join(BASE_DIR, "src/worker.py"), str(WORKER_PORT)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     time.sleep(1.5) # Wait for worker to start
     
     try:
@@ -135,13 +139,13 @@ def main():
     # 3. Read Native Simulators Output directly from their JSON traces
     print("\n[3] Reading Native Execution Metrics from Third-Party Frameworks...")
     
-    edgesimpy_delay = parse_native_json("/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/src/simulators/edgesimpy/edgesimpy_native_metrics.json", "EdgeSimPy_Native_Delay")
-    edgesimpy_time = parse_native_json("/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/src/simulators/edgesimpy/edgesimpy_native_metrics.json", "EdgeSimPy_Wall_Time")
+    edgesimpy_delay = parse_native_json(os.path.join(BASE_DIR, "src/simulators/edgesimpy/edgesimpy_native_metrics.json"), "EdgeSimPy_Native_Delay")
+    edgesimpy_time = parse_native_json(os.path.join(BASE_DIR, "src/simulators/edgesimpy/edgesimpy_native_metrics.json"), "EdgeSimPy_Wall_Time")
     
-    ecs_delay = parse_native_json("/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/ecs_native_metrics.json", "EdgeCloudSim_Native_Delay")
+    ecs_delay = parse_native_json(os.path.join(BASE_DIR, "third_party/ecs_native_metrics.json"), "EdgeCloudSim_Native_Delay")
     ecs_time = 0.125 # We saw ~125ms from ECS console native run
     
-    simu5g_delay = parse_native_json("/proj/oasees-PG0/NS3-Edge/NSEdge-Validation/third_party/Simu5G/simulations/nr/simu5g_native_metrics.json", "Simu5G_Native_Delay")
+    simu5g_delay = parse_native_json(os.path.join(BASE_DIR, "third_party/Simu5G/simulations/nr/simu5g_native_metrics.json"), "Simu5G_Native_Delay")
     simu5g_time = 9.902 # Extracted from the Simu5G physical OMNeT++ run
 
     print(f"\n[4] Simulating for {DURATION}s in NSEdge (Native NS-3)...")
